@@ -18,6 +18,10 @@ def main():
     subparsers = parser.add_subparsers(dest="command", help="Subcommand to execute")
 
     subparsers.add_parser("status", help="Display RCIL bus status and registered agents")
+    subparsers.add_parser("demo", help="Run interactive zero-config walkthrough demo")
+    p_bm = subparsers.add_parser("benchmark", help="Run token economics and latency benchmark")
+    p_bm.add_argument("--steps", type=int, default=15, help="Number of decision steps")
+    p_bm.add_argument("--live", action="store_true", help="Run against live TypeSafe Jev API")
 
     p_check = subparsers.add_parser("check", help="Check for pending system updates")
     p_check.add_argument("agent", nargs="?", default=".", help="Agent ID or workspace directory path")
@@ -42,7 +46,13 @@ def main():
 
     args = parser.parse_args()
 
-    if args.command == "status":
+    if args.command == "demo":
+        from .demo import run_interactive_demo
+        run_interactive_demo()
+    elif args.command == "benchmark":
+        import benchmark
+        benchmark.run_benchmark(steps=args.steps, use_live=args.live)
+    elif args.command == "status":
         print(json.dumps(rcil_bus.get_status_summary(), indent=2))
     elif args.command == "check":
         has_up, pending = rcil_bus.check_updates(args.agent)
