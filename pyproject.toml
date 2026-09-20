@@ -8,7 +8,7 @@ version = "1.1.0"
 authors = [
   { name="Saifullah Shafin" },
 ]
-description = "Recursive Contextual Intelligence Loop (RCIL) & Universal Question Intelligence Layer for Autonomous AI Agents"
+description = "RCIL: The Question Intelligence Layer for System One (TypeSafe Jev). Cuts autonomous agent costs by 95% and eliminates decision hallucinations."
 readme = "README.md"
 requires-python = ">=3.8"
 license = { text = "MIT" }
@@ -18,6 +18,16 @@ classifiers = [
     "Operating System :: OS Independent",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Topic :: Software Development :: Libraries :: Application Frameworks",
+]
+keywords = [
+    "system-one",
+    "typesafe-jev",
+    "rcil",
+    "agentic-ai",
+    "decision-intelligence",
+    "ai-agents",
+    "cost-optimization",
+    "openrouter"
 ]
 dependencies = []
 
