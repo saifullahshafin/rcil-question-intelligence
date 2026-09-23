@@ -191,11 +191,14 @@ if result["status"] == "QUESTIONS_PENDING":
 
 ### Layer Details:
 1. **Layer 0: Task Triage Gate (`task_triage.py`):** If `task_depth < 0.8` or task is iterative refinement, the agent proceeds immediately with **zero human interruption**.
-2. **Layer 1: Memory Mining (`memory_miner.py`):** Inspects AST knowledge graphs and workspace rules. Drops any question already documented.
+2. **Layer 1: Memory Mining (`memory_miner.py`):**
+   - **Obsidian System First Hierarchy:** Always prioritizes querying the **Obsaidy AST Knowledge Graph** (`obsaidy.py query`) and the **Obsidian Vault Notes & Agent Wiki** (`graphify-out/obsidian/*.md`, `graphify-out/wiki/*.md`).
+   - **Regular Memory Fallback:** If and only if the Obsidian System returns no match (or is uninitialized), falls back to standard workspace markdown rules (`GEMINI.md`, `AGENTS.md`, `README.md`, `docs/ARCHITECTURE.md`) and project configuration manifests (`package.json`, `pyproject.toml`, `docker-compose.yml`, `requirements.txt`).
+   - **Non-Negotiable Memory Rule:** Never ask the human director a question whose answer is already documented in memory.
 3. **Layer 2: Question Architecture (`question_architect.py`):** Enforces MECE, observable anchors, and a hard cap of **$\le 3$ questions** to prevent decision fatigue.
 4. **Layer 2.5: Dual Quality Gates:**
    - **Gate 2.5A (Structural):** Validates diagnostic score and redundancy.
-   - **Gate 2.5B (Holistic Third-Person Meta-Observer Gate):** Steps outside the recursive loop to catch XY-Problem traps and missing prerequisites. If caught, suppresses detail questions and asks the **`one_question_that_unlocks_everything`**.
+   - **Gate 2.5B: Holistic Third-Person Meta-Observer Gate (HMO Engine - `system1_holistic.py`):** Steps outside the recursive loop to catch XY-Problem traps, echo-chamber bias, and missing prerequisites. Features dual watermark latches (Stage 1 @ 40-50% and Stage 2 @ 60-70%) to arrest hallucinations and false 100% completions. Exposes native JSON-RPC tools via `system1_mcp_server.py`.
 5. **Layer 3: Boss Answer Encoder (`answer_encoder.py`):** Converts conversational answers into typed machine parameters using System One.
 6. **Layer 4: Enriched Execution:** Invokes lightweight models or deterministic code with 100% locked parameters.
 
